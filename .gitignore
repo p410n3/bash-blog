@@ -1,0 +1,11 @@
+images/*
+!images/.gitkeep
+posts/*
+!posts/.gitkeep
+pages/*
+!pages/.gitkeep
+
+output/
+
+template00
+template01
