@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Dependencies:
+# pandoc, parallel
+
 # Check if output exists. If not, create it
 [ -d 'output' ] || mkdir 'output'
 
@@ -8,7 +11,7 @@
 csplit -f template template.html '/+++/' > /dev/null
 
 # Convert all posts from .md to html in the order new to old
-_posts=$(ls posts | sort -r | sed 's#^#posts/#g' | parallel 'pandoc' | parallel 'echo \<div\>{}\<\/div\>')
+_posts=$(ls posts | sort -r | parallel 'pandoc posts/{}' | parallel 'echo \<div\>{}\<\/div\>')
 
 # Merge that stuff
 echo $(cat template00) $_posts $(cat template01) >> output/index.html
