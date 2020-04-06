@@ -22,7 +22,7 @@ csplit -f template template.html '/<!--+++-->/' > /dev/null
 ls posts | parallel 'pandoc posts/{}' -o 'output/posts/{.}.html'
 
 # Merge them with the template
-ls output/posts | parallel echo $(cat template00) $(cat output/posts/{}) $(cat template01) > output/posts/{}
+ls output/posts | parallel echo '"$(cat template00) $(cat output/posts/{}) $(cat template01)" > output/posts/{}'
 # todo stop newlines to disappear
 
 # Now make all image links in the posts relative to the img/ folder
@@ -31,7 +31,7 @@ ls output/posts | parallel echo $(cat template00) $(cat output/posts/{}) $(cat t
 # Get links to post. The linktext is the first header of said post
 _postlinks=$(ls output/posts | sort -r | parallel echo \
     '\<a href=\"posts/{}\"\> \
-        $(egrep -m1 -o "<h[0-5].*\/h[0-5]>" "output/posts/{}" | sed "s#</h[0-5]>##g" | sed "s#^.*>##g") \
+        $(grep -Po "<h[0-5].*?\/h[0-5]>" "output/posts/{}" | head -n 1 | sed "s#</h[0-5]>##g" | sed "s#^.*>##g") \
     \</a\>')
 
 # Merge the index page
