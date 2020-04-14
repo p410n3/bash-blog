@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TODO: Make faster by using more cores / threads via parallel
+# TODO: Use pexec instead of parallel
 
 # Dependencies:
 # pandoc, parallel
