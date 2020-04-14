@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # TODO: Use pexec instead of parallel
+# Example: pexec -c -o - -p "$(ls)" -e 'test' -- 'echo $test'
 
 # Dependencies:
 # pandoc, parallel
