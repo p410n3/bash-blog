@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# TODO: Use pexec instead of parallel
-# Example: pexec -c -o - -p "$(ls)" -e 'test' -- 'echo $test'
-
 # Dependencies:
 # pandoc, parallel
 
@@ -28,7 +25,24 @@ ls output/pages | parallel echo '"$(cat template00) <section> $(cat output/pages
 ls output/posts | parallel echo '"$(cat template00) <article> $(cat output/posts/{}) </article> $(cat template01)" > output/posts/{}'
 
 # Now make all image links in the files relative to the img/ folder
-# TODO
+
+# Make a function for later use with parallel
+function fix_img_links {
+    # $1 is gonna be the full path to the html file we are fixing atm
+
+    # Using awk, we get all images that are files in the html. 
+    # We then locate everything in front of the images name from it and replace it with our fixed path
+    _paths_to_fix=$(awk '/<img src=.*\/>/ && ( /jpg/ || /jpeg/ || /png/ || /gif/ ) && !/http/  { print $2; }' $1 | parallel echo | grep -o '^.*/')
+
+    # Now replace paths with our path
+    echo "$_paths_to_fix" | parallel echo "lol {}"
+}
+# export it in to the environment
+export -f fix_img_links
+
+ls output/pages | parallel fix_img_links "output/pages/{}"
+ls output/posts | parallel fix_img_links "output/posts/{}"
+exit 0
 
 # The following function generates the links to stuff like pages and posts. 
 
